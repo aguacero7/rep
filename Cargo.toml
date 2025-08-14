@@ -1,10 +1,37 @@
 [package]
-name = "snake_tui"
-version = "0.1.0"
-edition = "2024"
+name = "reptil-en-peligro"         
+version = "1.0.0"
+edition = "2021"                   
+description = "A terminal-based Snake game in Rust using ratatui/crossterm with a stylish banner, square fruits, and smooth gameplay."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/<ton-user>/reptil-en-peligro"
+homepage = "https://github.com/<ton-user>/reptil-en-peligro"
+documentation = "https://docs.rs/reptil-en-peligro"
+keywords = ["tui", "snake", "ratatui", "crossterm", "terminal"]
+categories = ["games", "command-line-utilities"]
+
+include = [
+    "src/**",
+    "Cargo.toml",
+    "README.md",
+    "LICENSE"
+]
+
+
+[[bin]]
+name = "rep"
+path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
 crossterm = "0.27"
 rand = "0.8"
 ratatui = { version = "0.29", features = ["crossterm"] }
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = 3
+strip = "symbols"
+panic = "abort"
