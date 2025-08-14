@@ -35,7 +35,7 @@ cargo install reptil-en-peligro
 ```
 Then run:
 ```bash
-reptil-en-peligro
+rep
 ```
 
 ## Controls
