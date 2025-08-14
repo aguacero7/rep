@@ -2,6 +2,7 @@
 
 **Reptil en Peligro** is a terminal-based Snake game built in Rust using [ratatui](https://github.com/tui-rs-revival/ratatui) for the TUI (Terminal User Interface) and [crossterm](https://github.com/crossterm-rs/crossterm) for terminal input/output handling.
 
+The size of the board depends on the size of your terminal's window.
 ## Features
 
 - Responsive TUI rendering with `ratatui`
