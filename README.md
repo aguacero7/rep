@@ -24,14 +24,14 @@
 
 ### From source
 ```bash
-git clone https://github.com/<your-user>/reptil-en-peligro.git
+git clone https://github.com/aguacero7/rep
 cd reptil-en-peligro
 cargo run
 ```
 
 ### Global installation via `cargo install`
 ```bash
-cargo install --git https://github.com/<your-user>/reptil-en-peligro
+cargo install reptil-en-peligro
 ```
 Then run:
 ```bash
