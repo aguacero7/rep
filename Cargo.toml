@@ -1,11 +1,11 @@
 [package]
 name = "reptil-en-peligro"         
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"                   
 description = "A terminal-based Snake game in Rust using ratatui/crossterm with a stylish banner, square fruits, and smooth gameplay."
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/<ton-user>/reptil-en-peligro"
+repository = "https://github.com/<aguacero/reptil-en-peligro"
 homepage = "https://github.com/<ton-user>/reptil-en-peligro"
 documentation = "https://docs.rs/reptil-en-peligro"
 keywords = ["tui", "snake", "ratatui", "crossterm", "terminal"]
