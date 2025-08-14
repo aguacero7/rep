@@ -1,19 +1,25 @@
 mod event;
 mod game;
 mod ui;
-const HEADER_ROWS: u16 = 3; // doit correspondre à Constraint::Length(3) dans ui.rs
+const HEADER_ROWS: u16 = 3;
 
-use std::{io, time::{Duration, Instant}};
 use anyhow::Result;
 use crossterm::{
-    execute,
-    terminal::{enable_raw_mode, disable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen, size as term_size},
     event::KeyCode,
+    execute,
+    terminal::{
+        EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode,
+        size as term_size,
+    },
 };
-use ratatui::{backend::CrosstermBackend, Terminal};
+use ratatui::{Terminal, backend::CrosstermBackend};
+use std::{
+    io,
+    time::{Duration, Instant},
+};
 
 use event::{Event, EventLoop};
-use game::{Game, Dir};
+use game::{Dir, Game};
 
 fn main() -> Result<()> {
     enable_raw_mode()?;
@@ -32,7 +38,6 @@ fn main() -> Result<()> {
     let start = Instant::now();
 
     'outer: loop {
-        // 1) On attend un événement (Tick/clavier/Resize), on le traite
         match events.recv()? {
             Event::Tick => {
                 game.update();
@@ -41,12 +46,11 @@ fn main() -> Result<()> {
                 }
             }
             Event::Key(KeyCode::Char('q')) | Event::Key(KeyCode::Esc) => break 'outer,
-            Event::Key(KeyCode::Up)    => game.change_dir(Dir::Up),
-            Event::Key(KeyCode::Down)  => game.change_dir(Dir::Down),
-            Event::Key(KeyCode::Left)  => game.change_dir(Dir::Left),
+            Event::Key(KeyCode::Up) => game.change_dir(Dir::Up),
+            Event::Key(KeyCode::Down) => game.change_dir(Dir::Down),
+            Event::Key(KeyCode::Left) => game.change_dir(Dir::Left),
             Event::Key(KeyCode::Right) => game.change_dir(Dir::Right),
             Event::Resize(w, h) => {
-                // 2) On recalibre le monde UNIQUEMENT au Resize
                 let (nw, nh) = world_from_terminal(w, h);
 
                 game.world.width = nw as i32;
@@ -64,7 +68,6 @@ fn main() -> Result<()> {
             Event::Key(_) => {}
         }
 
-        // 3) Puis on dessine (après update), pour voir tout de suite l'effet du Tick
         terminal.draw(|f| {
             let elapsed = start.elapsed().as_secs();
             ui::draw_ui(f, &game, elapsed);
@@ -76,20 +79,11 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-/// Calcule une taille de monde qui tient dans l'INNER du Board:
-/// - 1 cellule monde = 2 colonnes terminal (largeur), 1 ligne (hauteur)
-/// - On enlève 1 ligne pour le header + 2 lignes pour les bordures verticales du Block
-/// - On enlève 2 colonnes pour les bordures horizontales du Block
 fn world_from_terminal(term_cols: u16, term_rows: u16) -> (u16, u16) {
-    // largeur intérieure = colonnes - 2 (bordures gauche/droite)
     let inner_cols = term_cols.saturating_sub(2);
 
-    // hauteur intérieure = lignes - header - 2 (bordures haut/bas)
-    let inner_rows = term_rows
-        .saturating_sub(HEADER_ROWS)
-        .saturating_sub(2);
+    let inner_rows = term_rows.saturating_sub(HEADER_ROWS).saturating_sub(2);
 
-    // 1 cellule monde = 2 colonnes en largeur, 1 ligne en hauteur
     let cells_w = (inner_cols / 2).max(1);
     let cells_h = inner_rows.max(1);
 

@@ -1,5 +1,9 @@
-use std::{sync::mpsc, thread, time::{Duration, Instant}};
 use crossterm::event::{self, Event as CEvent, KeyCode, KeyEventKind};
+use std::{
+    sync::mpsc,
+    thread,
+    time::{Duration, Instant},
+};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Event {

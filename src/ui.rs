@@ -2,9 +2,9 @@ use ratatui::{
     Frame,
     buffer::Buffer,
     layout::{Constraint, Direction as LayoutDirection, Layout, Rect},
-    style::{Color, Style, Modifier},
+    style::{Color, Modifier, Style},
     text::{Line as TxtLine, Span},
-    widgets::{Block, Borders, Paragraph, Widget, BorderType}, 
+    widgets::{Block, BorderType, Borders, Paragraph, Widget},
 };
 
 use crate::game::Game;
@@ -12,23 +12,25 @@ use crate::game::Game;
 pub fn draw_ui(f: &mut Frame, game: &Game, elapsed_secs: u64) {
     let area = f.area();
 
-    // Hauteur un peu plus grande pour la banderole
     let chunks = Layout::default()
         .direction(LayoutDirection::Vertical)
         .constraints([Constraint::Length(3), Constraint::Min(1)])
         .split(area);
 
-    // ---------- Banderole stylisée ----------
     let title = Span::styled(
         " Reptil en Peligro ",
-        Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+        Style::default()
+            .fg(Color::Cyan)
+            .add_modifier(Modifier::BOLD),
     );
-    let sep   = Span::styled(" ─ ", Style::default().fg(Color::DarkGray));
+    let sep = Span::styled(" ─ ", Style::default().fg(Color::DarkGray));
     let score = Span::styled(
         format!("{} pts", game.score),
-        Style::default().fg(Color::Green).add_modifier(Modifier::BOLD),
+        Style::default()
+            .fg(Color::Green)
+            .add_modifier(Modifier::BOLD),
     );
-    let secs  = Span::styled(
+    let secs = Span::styled(
         format!("{} s", elapsed_secs),
         Style::default().fg(Color::Yellow),
     );
@@ -81,15 +83,17 @@ impl Widget for Board<'_> {
         // Styles
         let style_empty = Style::default();
         let style_snake = Style::default().fg(Color::Green);
-        let style_head  = Style::default().fg(Color::LightGreen).add_modifier(Modifier::BOLD);
-        let style_food  = Style::default().fg(Color::Red).add_modifier(Modifier::BOLD);
+        let style_head = Style::default()
+            .fg(Color::LightGreen)
+            .add_modifier(Modifier::BOLD);
+        let style_food = Style::default().fg(Color::Red).add_modifier(Modifier::BOLD);
 
         for vy in 0..vis_h_cells {
             for vx in 0..vis_w_cells {
                 let mx = vx as i32;
                 let my = vy as i32;
 
-                let col = inner.x + vx * 2; 
+                let col = inner.x + vx * 2;
                 let row = inner.y + vy;
 
                 if head.x == mx && head.y == my {

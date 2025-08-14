@@ -1,4 +1,4 @@
-use rand::{rngs::StdRng, Rng, SeedableRng};
+use rand::{Rng, SeedableRng, rngs::StdRng};
 use std::collections::VecDeque;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -49,17 +49,30 @@ impl Snake {
     pub fn new(start: Coord, len: usize, dir: Dir) -> Self {
         let mut body = VecDeque::with_capacity(len + 8);
         for i in 0..len {
-            body.push_back(Coord { x: start.x - i as i32, y: start.y });
+            body.push_back(Coord {
+                x: start.x - i as i32,
+                y: start.y,
+            });
         }
-        Self { body, dir, pending_dir: dir, grow: false }
+        Self {
+            body,
+            dir,
+            pending_dir: dir,
+            grow: false,
+        }
     }
 
-    pub fn head(&self) -> Coord { *self.body.front().unwrap() }
+    pub fn head(&self) -> Coord {
+        *self.body.front().unwrap()
+    }
 
     pub fn set_dir(&mut self, dir: Dir) {
         let illegal = matches!(
             (self.dir, dir),
-            (Dir::Up, Dir::Down) | (Dir::Down, Dir::Up) | (Dir::Left, Dir::Right) | (Dir::Right, Dir::Left)
+            (Dir::Up, Dir::Down)
+                | (Dir::Down, Dir::Up)
+                | (Dir::Left, Dir::Right)
+                | (Dir::Right, Dir::Left)
         );
         if !illegal {
             self.pending_dir = dir;
@@ -83,7 +96,9 @@ impl Snake {
         }
     }
 
-    pub fn grow(&mut self) { self.grow = true; }
+    pub fn grow(&mut self) {
+        self.grow = true;
+    }
 
     pub fn hits_self(&self) -> bool {
         let h = self.head();
@@ -93,9 +108,15 @@ impl Snake {
 
 impl Game {
     pub fn new(world_w: i32, world_h: i32, seed: u64) -> Self {
-        let world = World { width: world_w, height: world_h };
+        let world = World {
+            width: world_w,
+            height: world_h,
+        };
         let rng = StdRng::seed_from_u64(seed);
-        let start = Coord { x: world_w / 2, y: world_h / 2 };
+        let start = Coord {
+            x: world_w / 2,
+            y: world_h / 2,
+        };
         let mut g = Self {
             food: Coord { x: 0, y: 0 },
             world,
@@ -109,7 +130,9 @@ impl Game {
     }
 
     pub fn update(&mut self) {
-        if self.game_over { return; }
+        if self.game_over {
+            return;
+        }
         self.snake.step();
 
         let head = self.snake.head();
@@ -124,7 +147,9 @@ impl Game {
         }
     }
 
-    pub fn change_dir(&mut self, dir: Dir) { self.snake.set_dir(dir); }
+    pub fn change_dir(&mut self, dir: Dir) {
+        self.snake.set_dir(dir);
+    }
 
     fn rand_free_cell(&mut self) -> Coord {
         loop {
